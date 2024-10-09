@@ -1,0 +1,184 @@
+*{
+  box-sizing:border-box;
+  margin:0px;
+  padding:0px;
+}
+
+/* page size */
+body {
+  background: rgb(204,204,204); 
+}
+page {
+  background: white;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 0.5cm;
+  /* box-shadow: 0 0 0.5cm rgba(0,0,0,0.5); */
+}
+page[size="A4"] {  
+  width: 21cm;
+  height: 29.7cm; 
+}
+
+/* 纸张网格 */
+.row {
+  width: 100%;
+}
+.col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
+  float: left;
+  /* border: 1px solid green; */
+}
+.col-lg-1 {
+  width: 8.33%;
+}
+.col-lg-2 {
+  width: 16.66%;
+}
+.col-lg-3 {
+  width: 25%;
+}
+.col-lg-4 {
+  width: 33.33%;
+}
+.col-lg-5 {
+  width: 41.66%;
+}
+.col-lg-6 {
+  width: 50%;
+}
+.col-lg-7 {
+  width: 58.33%;
+}
+.col-lg-8 {
+  width: 66.66%;
+}
+.col-lg-9 {
+  width: 74.99%;
+}
+.col-lg-10 {
+  width: 83.33%;
+}
+.col-lg-11 {
+  width: 91.66%;
+}
+.col-lg-12 {
+  width: 100%;
+}
+
+
+div#contents { /*内容位置*/
+  width:20cm;
+  height:28cm;
+  /* border:1px solid black; */
+  margin-left:auto;
+  margin-right:auto;
+  padding-left: 10px;
+  position:relative;
+  top:30px; 
+   
+}
+
+/* 产品标题 */
+
+#title h2 {
+  margin-top:20px;
+  margin-left:10px;
+  
+}
+
+#title p {
+  margin-left:10px;
+  font-size: 20px;
+}
+
+
+/* logo */
+
+#logo-img {
+  float:right;/* 任何元素都可float, float元素下还可以float */
+  margin-top:10px;
+  margin-right:10px;
+}
+
+/* 产品尺寸图 */
+/* #product-img {
+
+  margin-left:30px;
+  margin-top:40px;
+  margin-bottom:30px;
+  
+} */
+
+/* 产品特点 */
+
+ul#product-feature {
+  margin-left:60px;
+  margin-top:10px;
+  list-style-type: square;
+  font-size: 12px;
+}
+
+/* 产品参数 */
+
+#technical-data {
+  clear:both;
+}
+
+
+table {
+  font-size: 0.7em;
+  margin-top:10px;
+  width:100%;
+  border-collapse:collapse;
+}
+
+td.col1 {
+  padding-left:8px;
+  /* padding-top:2.5px; */
+  /* padding-bottom:2.5px; */
+  width: 50%;/*两列等宽*/
+  vertical-align: top;/*文字垂直上端对齐*/
+}
+
+td.col2 {
+  /* padding-top:2.5px; */
+  /* padding-bottom:2.5px; */
+  width: 50%;/*两列等宽*/
+  vertical-align: top;/*文字垂直上端对齐*/
+}
+
+#table-border {
+  border-bottom:1px solid black;
+}
+
+/* 产品接线图 */
+
+#product-wiring {
+  padding-top:15px;
+  padding-left:5px;
+}
+
+/* 产品注释 */
+
+#notes {
+  color: red; 
+  font-size: 10px;
+  padding-top:10px;
+}
+
+/* footer */
+ul.container {
+  display: flex;
+  list-style: square;
+  justify-content: space-between;
+  padding-left:25px;
+  padding-right:20px;
+  
+}
+
+li.item {
+  font-size:10px;
+  margin-left:10px;
+  margin-right:10px;
+  
+}
