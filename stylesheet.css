@@ -83,12 +83,14 @@ div#contents { /*内容位置*/
 #title h2 {
   margin-top:20px;
   margin-left:10px;
+  font-family: 'Open Sans', sans-serif;
   
 }
 
 #title p {
   margin-left:10px;
   font-size: 20px;
+  font-family: 'Open Sans', sans-serif;
 }
 
 
