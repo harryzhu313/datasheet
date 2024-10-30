@@ -83,14 +83,13 @@ div#contents { /*内容位置*/
 #title h2 {
   margin-top:20px;
   margin-left:10px;
-  font-family: 'Open Sans', sans-serif;
-  
+  font-family: pingfang SC;
 }
 
 #title p {
   margin-left:10px;
   font-size: 20px;
-  font-family: 'Open Sans', sans-serif;
+  font-family: pingfang SC;
 }
 
 
@@ -153,6 +152,9 @@ td.col2 {
   border-bottom:1px solid black;
 }
 
+#index2-table {
+  margin-top:50px;
+}
 /* 产品接线图 */
 
 #product-wiring {
