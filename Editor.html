@@ -3,71 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>产品手册生成器</title>
+  <title>产品手册生成器（实时预览）</title>
   <style>
     body { font-family: sans-serif; padding: 20px; }
     label { display: block; margin-top: 10px; }
     input, textarea { width: 100%; margin-top: 5px; }
     button { margin-top: 20px; padding: 10px 20px; }
     img { max-width: 200px; margin-top: 10px; }
+    iframe { width: 100%; height: 600px; margin-top: 20px; border: 1px solid #ccc; }
   </style>
 </head>
 <body>
-  <h1>产品信息填写（基于index1模板）</h1>
+  <h1>产品信息填写（实时预览）</h1>
   <form id="product-form">
-    <label>产品名称: <input name="title" required /></label>
-    <label>副标题: <input name="subtitle" /></label>
-    <label>型号: <input name="model" required /></label>
+    <label>产品名称: <input name="title" required oninput="updatePreview()" /></label>
+    <label>副标题: <input name="subtitle" oninput="updatePreview()" /></label>
+    <label>型号: <input name="model" required oninput="updatePreview()" /></label>
     <label>产品特点（每行一个）:<br>
-      <textarea name="features" required></textarea>
+      <textarea name="features" required oninput="updatePreview()"></textarea>
     </label>
     <label>产品参数（每行一个，格式为“参数名:参数值”，需边框则在行首加“*”）:<br>
-      <textarea name="parameters" required></textarea>
+      <textarea name="parameters" required oninput="updatePreview()"></textarea>
     </label>
     <label>注释内容:<br>
-      <input name="notes" />
+      <input name="notes" oninput="updatePreview()" />
     </label>
     <label>尺寸图图片:<br>
-      <input type="file" name="sizeImage" accept="image/*" onchange="previewImage(event, 'sizeImagePreview')">
+      <input type="file" name="sizeImage" accept="image/*" onchange="previewImage(event, 'sizeImagePreview'); updatePreview();">
       <img id="sizeImagePreview" src="">
     </label>
     <label>接线图图片:<br>
-      <input type="file" name="wiringImage" accept="image/*" onchange="previewImage(event, 'wiringImagePreview')">
+      <input type="file" name="wiringImage" accept="image/*" onchange="previewImage(event, 'wiringImagePreview'); updatePreview();">
       <img id="wiringImagePreview" src="">
     </label>
     <button type="button" onclick="generate()">生成 HTML</button>
     <button type="button" onclick="saveJSON()">保存为JSON</button>
   </form>
 
+  <iframe id="preview"></iframe>
+
   <script>
-    function previewImage(event, previewId) { // 用于预览图片
+    function previewImage(event, previewId) {
       const reader = new FileReader();
-      reader.onload = function(){ // onload 事件在读取操作完成时触发
-        document.getElementById(previewId).src = reader.result; // result 属性返回一个包含所读取文件的数据的URL
+      reader.onload = function(){
+        document.getElementById(previewId).src = reader.result;
+        updatePreview();
       };
       reader.readAsDataURL(event.target.files[0]);
-    } // FileReader 对象允许Web应用程序异步读取存储在用户计算机上的文件（或原始数据缓冲区）的内容，使用 File 或 Blob 对象指定要读取的文件或数据。
+    }
 
-    function generate() {
-      const form = document.forms['product-form']; // 获取表单元素
-      const title = form.title.value.trim(); // trim() 方法用于删除字符串的头尾空白符
+    function generateHTML() {
+      const form = document.forms['product-form'];
+      const title = form.title.value.trim();
       const subtitle = form.subtitle.value.trim();
       const model = form.model.value.trim();
-      const features = form.features.value.trim().split('\n').map(f => `<li>${f}</li>`).join('\n'); // map() 方法创建一个新数组，其结果是该数组中的每个元素都调用一个提供的函数后返回的结果
-      const parameters = form.parameters.value.trim().split('\n').map(line => { // split() 方法用于把一个字符串分割成字符串数组
+      const features = form.features.value.trim().split('\n').map(f => `<li>${f}</li>`).join('\n');
+      const parameters = form.parameters.value.trim().split('\n').map(line => {
         let border = '';
         if(line.startsWith('*')) {
           line = line.substring(1);
-          border = ' id="table-border"'; // 用于设置表格边框
+          border = ' id="table-border"';
         }
         const [key, value] = line.split(':');
-        return `<tr${border}><td class=\"col1\">${key.trim()}</td><td class=\"col2\">${value.trim()}</td></tr>`; 
-      }).join('\n'); // join() 方法用于把数组中的所有元素放入一个字符串，参数通过冒号分隔并传入col1 和 col2 类的 table list
-      const notes = form.notes.value.trim(); // notes值
+        return `<tr${border}><td class=\"col1\">${key.trim()}</td><td class=\"col2\">${value.trim()}</td></tr>`;
+      }).join('\n');
+      const notes = form.notes.value.trim();
       const sizeImage = document.getElementById('sizeImagePreview').src;
       const wiringImage = document.getElementById('wiringImagePreview').src;
 
-      const htmlTemplate = `<!DOCTYPE html>
+      return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -112,7 +116,7 @@
       <div class="col-lg-3" id="product-wiring">
         <img src="${wiringImage}" alt="产品接线图" width="100%">
       </div>
-      </div>
+ </div>
       <footer>
         <ul class="container">
           <li class="item">天津市森特奈电子有限公司</li>
@@ -121,26 +125,32 @@
           <li class="item">www.sentinel-china.com</li>
         </ul>
       </footer>
+   
   </page>
 </body>
 </html>`;
+    }
 
-//实现本地 html 文件下载
-      const blob = new Blob([htmlTemplate], {type: 'text/html'});
+    function updatePreview() {
+      const iframe = document.getElementById('preview');
+      iframe.srcdoc = generateHTML();
+    }
+
+    function generate() {
+      const blob = new Blob([generateHTML()], {type: 'text/html'});
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `${model}.html`; // download 属性规定被下载的超链接目标
+      a.download = `product.html`;
       a.click();
     }
 
     function saveJSON() {
-      const form = document.forms['product-form'];
       const data = {
         title: form.title.value,
         subtitle: form.subtitle.value,
         model: form.model.value,
         features: form.features.value.split('\n'),
-        parameters: form.parameters.value.split('\n').map(line => line.trim()),
+        parameters: form.parameters.value.split('\n'),
         notes: form.notes.value
       };
       const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
